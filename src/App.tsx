@@ -12,9 +12,10 @@ function App() {
   return (
     <div>
       <Slider
-        fade={true}
-        slidesToScroll={2}
-        slidesToShow={2}
+      infinite={false}
+        fade={false}
+        slidesToScroll={1}
+        slidesToShow={1}
         speed={1000}
         ref={sliderRef}
       >

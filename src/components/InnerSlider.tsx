@@ -8,6 +8,7 @@ export type InnerSliderPropsType = {
   fade: boolean;
   slidesToView: number
   slidesToScroll: number
+  infinite: boolean
 };
 
 const InnerSlider = forwardRef((props: InnerSliderPropsType, ref) => {

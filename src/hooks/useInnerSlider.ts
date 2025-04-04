@@ -7,21 +7,23 @@ import {
   useState,
 } from "react";
 import { InnerSliderPropsType } from "../components/InnerSlider";
+import { getPreClone } from "../utils/innerSliderUtils";
 
-export const useInnerSlider = (spec: InnerSliderPropsType) => {
-  const { children, fade, speed } = spec;
-  const slidesToScroll = fade ? 1 : spec.slidesToScroll;
-  const slidesToView = fade ? 1 : spec.slidesToView;
+export const useInnerSlider = (props: InnerSliderPropsType) => {
+  const { children, fade, speed, infinite } = props;
+  const slidesToScroll = fade ? 1 : props.slidesToScroll;
+  const slidesToView = fade ? 1 : props.slidesToView;
+  const spec = { ...props, slidesToScroll, slidesToView };
   const listRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDialogElement>(null);
 
   const slideCount = Children.count(children);
   const [listWidth, setListWidth] = useState(0);
   const [trackWidth, setTrackWidth] = useState<number | string>(
-    `${slideCount * 100}%`
+    `${(getPreClone(spec) + slideCount) * 100}%`
   );
   const [slideWidth, setSlideWidth] = useState<number | string>(
-    `${100 / slideCount / slidesToView}%`
+    `${100 / (getPreClone(spec) + slideCount) / slidesToView}%`
   );
   const [currentSlide, setCurrentSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -30,7 +32,7 @@ export const useInnerSlider = (spec: InnerSliderPropsType) => {
       const listWidth = listRef.current.offsetWidth;
       const slideWidth = listWidth / slidesToView;
       setListWidth(listWidth);
-      setTrackWidth(slideWidth * slideCount);
+      setTrackWidth(slideWidth * (getPreClone(spec) + slideCount));
       setSlideWidth(slideWidth);
     }
   }, [slideCount, slidesToView]);
@@ -63,6 +65,8 @@ export const useInnerSlider = (spec: InnerSliderPropsType) => {
     speed: speed,
     fade: fade,
     animating,
+    infinite,
+    slideCount,
   };
 
   const slideHandler = (nextSlide: SetStateAction<number>) => {

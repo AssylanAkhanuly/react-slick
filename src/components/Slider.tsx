@@ -11,6 +11,7 @@ export type SliderPropType = {
   fade?: boolean;
   slidesToShow?: number;
   slidesToScroll?: number;
+  infinite?: boolean;
 };
 const Slider = forwardRef<SliderRefType, SliderPropType>(
   (
@@ -20,12 +21,14 @@ const Slider = forwardRef<SliderRefType, SliderPropType>(
       fade = false,
       slidesToShow = 1,
       slidesToScroll = 1,
+      infinite = false,
     },
     ref
   ) => {
     return (
       <InnerSlider
         ref={ref}
+        infinite={infinite}
         speed={speed}
         fade={fade}
         slidesToView={slidesToShow}

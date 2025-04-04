@@ -14,6 +14,8 @@ type TrackPropsType = {
   fade: boolean;
   speed: number;
   animating: boolean;
+  infinite: boolean;
+  slideCount: number;
 };
 
 const getSlideStyle = (spec: TrackPropsType, index: number) => {
@@ -35,6 +37,7 @@ const getSlideStyle = (spec: TrackPropsType, index: number) => {
 };
 const renderSlides = (spec: TrackPropsType) => {
   const slides: DetailedReactHTMLElement<any, any>[] = [];
+  const preCloned: DetailedReactHTMLElement<any, any>[] = [];
   Children.forEach(spec.children, (child, index) => {
     const style = getSlideStyle(spec, index);
     slides.push(
@@ -44,13 +47,30 @@ const renderSlides = (spec: TrackPropsType) => {
         style,
       })
     );
+
+    const preclonedStyle = getSlideStyle(spec, index - spec.slideCount);
+    preCloned.push(
+      cloneElement(child, {
+        key: index,
+        className: "slick-slide slick-cloned",
+        style: preclonedStyle,
+      })
+    );
   });
-  return slides;
+  return preCloned.concat(slides);
 };
 const Track = forwardRef<HTMLDivElement, TrackPropsType>((props, ref) => {
   const slides = renderSlides(props);
-  const { slideWidth, currentSlide, speed, fade, animating, ...divProps } =
-    props;
+  const {
+    slideWidth,
+    currentSlide,
+    speed,
+    fade,
+    animating,
+    infinite,
+    slideCount,
+    ...divProps
+  } = props;
   return (
     <div id="track" ref={ref} {...divProps} className="slick-track">
       {slides}
